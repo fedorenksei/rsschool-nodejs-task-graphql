@@ -1,14 +1,10 @@
-import { PrismaClient } from '@prisma/client';
 import { GraphQLList, GraphQLObjectType, GraphQLSchema } from 'graphql';
-import { User } from './user.js';
+import { Context } from './context.js';
+import { MemberType, MemberTypeIdType } from './member-type.js';
 import { Post } from './post.js';
 import { Profile } from './profile.js';
-import { MemberType, MemberTypeIdType } from './member-type.js';
+import { User } from './user.js';
 import { UUIDType } from './uuid.js';
-
-type Context = {
-  prisma: PrismaClient;
-};
 
 export const gqlQuerySchema = new GraphQLSchema({
   query: new GraphQLObjectType({
