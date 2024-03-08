@@ -1,9 +1,9 @@
-import { GraphQLList, GraphQLObjectType, GraphQLSchema } from 'graphql';
+import { GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLSchema } from 'graphql';
 import { Context } from './context.js';
 import { MemberType, MemberTypeIdType } from './member-type.js';
-import { Post } from './post.js';
-import { Profile } from './profile.js';
-import { User } from './user.js';
+import { Post, PostDto } from './post.js';
+import { Profile, ProfileDto } from './profile.js';
+import { User, UserDto } from './user.js';
 import { UUIDType } from './uuid.js';
 
 export const gqlQuerySchema = new GraphQLSchema({
@@ -60,6 +60,51 @@ export const gqlQuerySchema = new GraphQLSchema({
         args: { id: { type: MemberTypeIdType } },
         resolve(source, { id }: { id: string }, { prisma }: Context) {
           return prisma.memberType.findUnique({ where: { id } });
+        },
+      },
+    },
+  }),
+  mutation: new GraphQLObjectType({
+    name: 'Mutation',
+    fields: {
+      createUser: {
+        type: User,
+        args: { dto: { type: new GraphQLNonNull(UserDto) } },
+        resolve(
+          source,
+          data: { dto: { name: string; balance: number } },
+          { prisma }: Context,
+        ) {
+          return prisma.user.create({ data: data.dto });
+        },
+      },
+      createPost: {
+        type: Post,
+        args: { dto: { type: new GraphQLNonNull(PostDto) } },
+        resolve(
+          source,
+          data: { dto: { title: string; content: string; authorId: string } },
+          { prisma }: Context,
+        ) {
+          return prisma.post.create({ data: data.dto });
+        },
+      },
+      createProfile: {
+        type: Profile,
+        args: { dto: { type: new GraphQLNonNull(ProfileDto) } },
+        resolve(
+          source,
+          data: {
+            dto: {
+              isMale: boolean;
+              yearOfBirth: number;
+              memberTypeId: string;
+              userId: string;
+            };
+          },
+          { prisma }: Context,
+        ) {
+          return prisma.profile.create({ data: data.dto });
         },
       },
     },
