@@ -63,3 +63,38 @@ export const changeUser: GraphQLFieldConfig<null, Context> = {
     }
   },
 };
+
+export const subscribeTo: GraphQLFieldConfig<null, Context> = {
+  type: User,
+  args: {
+    userId: { type: UUIDType },
+    authorId: { type: UUIDType },
+  },
+  resolve(
+    source,
+    { userId, authorId }: { userId: string; authorId: string },
+    { prisma }: Context,
+  ) {
+    return prisma.user.update({
+      where: { id: userId },
+      data: { userSubscribedTo: { create: { authorId } } },
+    });
+  },
+};
+
+export const unsubscribeFrom: GraphQLFieldConfig<null, Context> = {
+  type: GraphQLString,
+  args: {
+    userId: { type: UUIDType },
+    authorId: { type: UUIDType },
+  },
+  async resolve(
+    source,
+    { userId, authorId }: { userId: string; authorId: string },
+    { prisma }: Context,
+  ) {
+    await prisma.subscribersOnAuthors.delete({
+      where: { subscriberId_authorId: { subscriberId: userId, authorId } },
+    });
+  },
+};

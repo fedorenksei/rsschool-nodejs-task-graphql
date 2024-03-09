@@ -8,7 +8,15 @@ import {
   profile,
   profiles,
 } from './types/profile/fields.js';
-import { changeUser, createUser, deleteUser, user, users } from './types/user/fields.js';
+import {
+  changeUser,
+  createUser,
+  deleteUser,
+  subscribeTo,
+  unsubscribeFrom,
+  user,
+  users,
+} from './types/user/fields.js';
 
 export const query = new GraphQLObjectType({
   name: 'Query',
@@ -36,6 +44,8 @@ const mutation = new GraphQLObjectType({
     changeUser,
     changePost,
     changeProfile,
+    subscribeTo,
+    unsubscribeFrom,
   },
 });
 
