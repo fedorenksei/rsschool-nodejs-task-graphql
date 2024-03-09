@@ -5,10 +5,10 @@ import {
   GraphQLObjectType,
   GraphQLString,
 } from 'graphql';
-import { Context } from './context.js';
-import { Post } from './post.js';
-import { UUIDType } from './uuid.js';
-import { Profile } from './profile.js';
+import { Context } from '../context.js';
+import { Post } from '../post/types.js';
+import { Profile } from '../profile/profile.js';
+import { UUIDType } from '../uuid.js';
 
 export const User: GraphQLObjectType = new GraphQLObjectType({
   name: 'User',
@@ -47,7 +47,7 @@ export const User: GraphQLObjectType = new GraphQLObjectType({
   }),
 });
 
-export const UserDto = new GraphQLInputObjectType({
+export const CreateUserInputType = new GraphQLInputObjectType({
   name: 'CreateUserInput',
   fields: {
     name: { type: GraphQLString },
