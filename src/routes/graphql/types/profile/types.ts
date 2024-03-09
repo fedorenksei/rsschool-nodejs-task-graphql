@@ -8,14 +8,18 @@ import { Context } from '../context.js';
 import { MemberType, MemberTypeIdType } from '../memberType/types.js';
 import { UUIDType } from '../uuid.js';
 
+const ProfileDtoFields = {
+  isMale: { type: GraphQLBoolean },
+  yearOfBirth: { type: GraphQLInt },
+  memberTypeId: { type: MemberTypeIdType },
+};
+
 export const Profile = new GraphQLObjectType({
   name: 'Profile',
   fields: {
     id: { type: UUIDType },
-    isMale: { type: GraphQLBoolean },
-    yearOfBirth: { type: GraphQLInt },
+    ...ProfileDtoFields,
     userId: { type: UUIDType },
-    memberTypeId: { type: MemberTypeIdType },
     memberType: {
       type: MemberType,
       resolve(source: { id: string }, args, { prisma }: Context) {
@@ -27,10 +31,13 @@ export const Profile = new GraphQLObjectType({
 
 export const CreateProfileInputType = new GraphQLInputObjectType({
   name: 'CreateProfileInput',
-  fields: () => ({
-    isMale: { type: GraphQLBoolean },
-    yearOfBirth: { type: GraphQLInt },
-    memberTypeId: { type: MemberTypeIdType },
+  fields: {
+    ...ProfileDtoFields,
     userId: { type: UUIDType },
-  }),
+  },
+});
+
+export const ChangeProfileInputType = new GraphQLInputObjectType({
+  name: 'ChangeProfileInput',
+  fields: ProfileDtoFields,
 });

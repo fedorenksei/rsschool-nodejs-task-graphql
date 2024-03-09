@@ -1,7 +1,7 @@
-import { GraphQLFieldConfig, GraphQLList, GraphQLNonNull } from 'graphql';
-import { CreatePostInputType, Post } from './types.js';
+import { GraphQLFieldConfig, GraphQLList, GraphQLString } from 'graphql';
 import { Context } from '../context.js';
 import { UUIDType } from '../uuid.js';
+import { ChangePostInputType, CreatePostInputType, Post } from './types.js';
 
 export const posts: GraphQLFieldConfig<null, Context> = {
   type: new GraphQLList(Post),
@@ -20,12 +20,39 @@ export const post: GraphQLFieldConfig<null, Context> = {
 
 export const createPost: GraphQLFieldConfig<null, Context> = {
   type: Post,
-  args: { dto: { type: new GraphQLNonNull(CreatePostInputType) } },
+  args: { dto: { type: CreatePostInputType } },
   resolve(
     source,
-    data: { dto: { title: string; content: string; authorId: string } },
+    { dto }: { dto: { title: string; content: string; authorId: string } },
     { prisma }: Context,
   ) {
-    return prisma.post.create({ data: data.dto });
+    return prisma.post.create({ data: dto });
+  },
+};
+
+export const deletePost: GraphQLFieldConfig<null, Context> = {
+  type: GraphQLString,
+  args: { id: { type: UUIDType } },
+  async resolve(source, { id }: { id: string }, { prisma }: Context) {
+    await prisma.post.delete({ where: { id } });
+    return '';
+  },
+};
+
+export const changePost: GraphQLFieldConfig<null, Context> = {
+  type: Post,
+  args: {
+    id: { type: UUIDType },
+    dto: { type: ChangePostInputType },
+  },
+  async resolve(
+    source,
+    {
+      id,
+      dto,
+    }: { id: string; dto: { title: string; content: string; authorId: string } },
+    { prisma }: Context,
+  ) {
+    return prisma.post.update({ where: { id }, data: dto });
   },
 };

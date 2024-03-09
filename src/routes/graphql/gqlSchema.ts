@@ -1,8 +1,14 @@
 import { GraphQLObjectType, GraphQLSchema } from 'graphql';
 import { memberType, memberTypes } from './types/memberType/fields.js';
-import { createPost, post, posts } from './types/post/fields.js';
-import { createProfile, profile, profiles } from './types/profile/fields.js';
-import { createUser, user, users } from './types/user/fields.js';
+import { changePost, createPost, deletePost, post, posts } from './types/post/fields.js';
+import {
+  changeProfile,
+  createProfile,
+  deleteProfile,
+  profile,
+  profiles,
+} from './types/profile/fields.js';
+import { changeUser, createUser, deleteUser, user, users } from './types/user/fields.js';
 
 export const query = new GraphQLObjectType({
   name: 'Query',
@@ -24,6 +30,12 @@ const mutation = new GraphQLObjectType({
     createUser,
     createPost,
     createProfile,
+    deleteUser,
+    deletePost,
+    deleteProfile,
+    changeUser,
+    changePost,
+    changeProfile,
   },
 });
 

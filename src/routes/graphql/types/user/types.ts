@@ -7,15 +7,19 @@ import {
 } from 'graphql';
 import { Context } from '../context.js';
 import { Post } from '../post/types.js';
-import { Profile } from '../profile/profile.js';
+import { Profile } from '../profile/types.js';
 import { UUIDType } from '../uuid.js';
+
+const UserDtoFields = {
+  name: { type: GraphQLString },
+  balance: { type: GraphQLFloat },
+};
 
 export const User: GraphQLObjectType = new GraphQLObjectType({
   name: 'User',
   fields: () => ({
     id: { type: UUIDType },
-    name: { type: GraphQLString },
-    balance: { type: GraphQLFloat },
+    ...UserDtoFields,
     posts: {
       type: new GraphQLList(Post),
       resolve(source: { id: string }, args, { prisma }: Context) {
@@ -49,8 +53,10 @@ export const User: GraphQLObjectType = new GraphQLObjectType({
 
 export const CreateUserInputType = new GraphQLInputObjectType({
   name: 'CreateUserInput',
-  fields: {
-    name: { type: GraphQLString },
-    balance: { type: GraphQLFloat },
-  },
+  fields: UserDtoFields,
+});
+
+export const ChangeUserInputType = new GraphQLInputObjectType({
+  name: 'ChangeUserInput',
+  fields: UserDtoFields,
 });
